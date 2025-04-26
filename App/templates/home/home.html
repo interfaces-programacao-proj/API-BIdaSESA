@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - BI da Sesa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icons-logo.svg') }}" type="image/x-icon">
+</head>
+<body>
+    <div class='divMainCertificados'>
+            
+        <div>
+            <h1>Dashboards</h1>
+        </div>
+        <div class='div_dashboards'>
+            <a href='{{ url_for("dash1")}}'> <h3> AWS Cloud Practitioner Certified </h3> </a>
+        </div>
+        <div class='div_dashboards'> 
+            <a> <h3> Data Science Specialization Compass.uol </h3> </a>
+        </div>
+
+        <div class='div_dashboards'>
+            <a> <h3> Machine Learning Bootcamp Atlantico </h3> </a>
+        </div>
+
+        <div class='div_voltar'>
+            <a href='{{ url_for("login")}}'>  <h4>Voltar</h4> </a>
+        </div>
+    </div>
+</body>
+</html>

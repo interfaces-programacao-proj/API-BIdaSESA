@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+* {
+    font: 'Inter', sans-serif;
+}
+div{
+    font: 'Inter', sans-serif;
+}
+
+body{
+    background-color: antiquewhite;
+}
+#div-main{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+}
+
+
+.div-login{
+    position: relative;
+    width: 350px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.div-login form{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+
+.div-login form input{
+    width: 280px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.div-login form button{
+    padding: 10px;
+    margin: 10px;
+    background-color : mediumspringgreen;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    border: none;
+}
+
+.div-login form button:hover{
+    background-color: rgb(0, 255, 89);
+}

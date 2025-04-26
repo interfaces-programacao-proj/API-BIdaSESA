@@ -3,10 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/static/css/login.css') }}">
     <title>Bi da Sesa</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='icons/icons-logo.svg') }}" type="image/x-icon">
 </head>
 <body>
-    
+    <div id="div-main">
+        <div class="div-login">
+            <h2>Login</h2>
+            <form action='{{ url_for("login")}}' method="POST">
+                <input type="text"     id="username" name="username" required placeholder="Nome de Usuário">
+                <input type="password" id="password" name="password" required placeholder="Senha">
+                <button>Login</button>
+            </form>
+        </div>
+    </div>
+    {% if mensagen %}
+    <script>
+        try{
+            if ({{mensagen}} == 'true'){
+                alert('Usuário ou senha inválidos')
+            }
+        }
+    </script>
+    {% endif %}
 </body>
 </html>

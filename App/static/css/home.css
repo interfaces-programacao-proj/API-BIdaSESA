@@ -1,0 +1,52 @@
+* {
+    font: 'Inter', sans-serif;
+}
+
+body{
+    background-color: antiquewhite;
+}
+
+.divMainCertificados {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.div_dashboards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 400px;
+    height: 60px;
+    background-color: rgba(189, 189, 189, 0.395);
+    border: 1px solid rgba(0, 0, 0, 0.68);
+    border-radius: 10px;
+    transition: transform 0.2s;
+
+    margin-top: 10px;
+}
+
+.div_dashboards:hover {
+    transform: scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.div_voltar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    transition: transform 0.2s;
+
+    margin-top: 10px;
+}
+
+.div_voltar:hover {
+    transform: scale(1.4);
+}
+
+.div_voltar a {
+    text-decoration: none;
+    color: black;
+}
