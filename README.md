@@ -4,12 +4,13 @@ Aplicação Flask BI da SESA
 ## Passos 
 1. Instale as lib requeridas com base no arquivo 'lib/requeriments.txt' com:
 ```cmd
-pip install -r lib/requirements.txt
+pip install -r bibliotecas/requirements.txt
 ```
 ou
 ```cmd
-python3 -m pip install -r lib/requirements.txt
+python3 -m pip install -r bibliotecas/requirements.txt
 ```
+> Obs: crie antes o venv
 
 2. Após crie sua propria branch:
     1. Primeiro, garante que você está no repositório certo:
