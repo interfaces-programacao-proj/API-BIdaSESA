@@ -1,13 +1,7 @@
-
 import plotly.graph_objects as go
 import dash_mantine_components as dmc
 from dash import Dash, dcc, html, _dash_renderer
 from dash_mantine_components import MantineProvider
-
-
-
-
-
 
 def dashboard1(appFlask):
     # Outras configs importantes
@@ -15,8 +9,7 @@ def dashboard1(appFlask):
     
     app = Dash(
         name="dashboardStatic", 
-        title="Dashboard"    , 
-        external_stylesheets=[dmc.styles.ALL], 
+        title="Dashboard", 
         server = appFlask, 
         url_base_pathname='/home/dash1/',
     )
@@ -28,11 +21,10 @@ def dashboard1(appFlask):
     fig = go.Figure()
     fig.update_layout(height=300)
     
-    
     ## --------------------------
     
     ## Linha 0 - Coloque os cards
-    configsCard        = dict(withBorder=True, shadow="sm", radius="md")
+    configsCard = dict(withBorder=True, shadow="sm", radius="md")
     configsCardSection = dict(withBorder=True, inheritPadding=True, py="xs")
     
     linha0 = dmc.Grid([
@@ -56,8 +48,7 @@ def dashboard1(appFlask):
     ], gutter="xs", align="stretch", justify='center')
     
     ## Linha 1
-    
-    paper  = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
+    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
     
     linha1 = dmc.Grid([
         dmc.GridCol([
@@ -81,7 +72,7 @@ def dashboard1(appFlask):
     
     
     ## Linha 2
-    paper  = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
+    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
     
     linha2 = dmc.Grid([
         dmc.GridCol([
@@ -105,12 +96,33 @@ def dashboard1(appFlask):
     
     ### --------------------------
     # Layout
-    app.layout = MantineProvider([
-        dmc.Stack([
-            linha0,
-            linha1,
-            linha2
-        ], gap="xs"),
-    ])
+    app.layout = html.Div(
+        style={"backgroundColor": "#f2e8cf", "minHeight": "100vh", "padding": "10px"},
+        children=[
+            MantineProvider(
+                theme={
+                    "colorScheme": "light",
+                    "primaryColor": "blue",
+                    "components": {
+                        "Paper": {
+                            "styles": {"root": {"backgroundColor": "#ffffff"}},
+                        },
+                        "Card": {
+                            "styles": {"root": {"backgroundColor": "#ffffff"}},
+                        }
+                    }
+                },
+                children=[
+                    dmc.Container([
+                        dmc.Stack([
+                            linha0,
+                            linha1,
+                            linha2
+                        ], gap="xs")
+                    ], fluid=True, px=0)
+                ]
+            )
+        ]
+    )
 
     return app.server

@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
 * {
-    font: 'Inter', sans-serif;
+    font-family: 'Inter', sans-serif;
 }
 
 body{
-    background-color: antiquewhite;
+    background-color: #f2e8cf;
 }
+
 
 .divMainCertificados {
     display: flex;

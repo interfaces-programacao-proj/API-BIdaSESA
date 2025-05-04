@@ -14,12 +14,62 @@
             <form action='{{ url_for("login")}}' method="POST">
                 <input type="text"     id="username" name="username" required placeholder="Nome de Usuário">
                 <input type="password" id="password" name="password" required placeholder="Senha">
-                <button>Login</button>
+                <button class="button-cadastrar-login">Login</button>
             </form>
         </div>
+        <div id="div-cadastro">
+            <p>Novo por aqui ?</p><a href="#" id="abrir-modal">Cadastre-se</a>
+        </div>
+
+        <!-- The Modal -->
+        <div id="modal-cadastro" class="modal-cad" style="display: none;">
+            <!-- Modal content -->
+            <div class="modal-cadastro-div"> 
+                <h2>Cadastro</h2>
+                <form class="modal-cadastro-form">
+                    <input type="text"     id="username" name="username"  required placeholder="Nome de Usuário">
+                    <input type="email"     id="email" name="email"       required placeholder="Email">
+                    <input type="password" id="password" name="password"  required placeholder="Senha">
+                    <input type="password" id="password" name="passwordR" required placeholder="Confirme a Senha">
+                    <div>
+                        <button class="button-cadastrar-login">Cadastrar</button>
+                        <button type="button" class="button-sair" formnovalidate>Sair</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <div id="div-cadastro">
-        <h4>Novo por aqui? </h4><a href='{{ url_for("cadastro")}}'> <h4> Cadastre-se </h4> </a>
-    </div>
+
+        <script type="text/javascript">
+            var modal = document.getElementById("modal-cadastro");
+            var btn  = document.getElementById("abrir-modal");
+            var span = document.getElementsByClassName("close")[0];
+
+            // Quando o usuário clicar no botão
+            btn.onclick = function() {
+                event.preventDefault();
+                modal.style.display = "block";
+
+                
+                // Sempre que abrir, reatribui o evento de clique ao botão "Sair"
+                var btnSair = document.querySelector("[class=button-sair]");
+                btnSair.onclick = function(event) {
+                    event.preventDefault();
+                    modal.style.display = "none";
+                };
+            }
+
+            // Quando o usuário clicar no X
+            span.onclick = function() {
+                modal.style.display = "none";
+            }
+
+            // Quando o usuário clicar fora do modal
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>    
 </body>
 </html>
