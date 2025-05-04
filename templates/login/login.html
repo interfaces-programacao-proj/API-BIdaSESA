@@ -18,14 +18,8 @@
             </form>
         </div>
     </div>
-    {% if mensagen %}
-    <script>
-        try{
-            if ({{mensagen}} == 'true'){
-                alert('Usuário ou senha inválidos')
-            }
-        }
-    </script>
-    {% endif %}
+    <div id="div-cadastro">
+        <h4>Novo por aqui? </h4><a href='{{ url_for("cadastro")}}'> <h4> Cadastre-se </h4> </a>
+    </div>
 </body>
 </html>
