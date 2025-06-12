@@ -3,6 +3,35 @@ import dash_mantine_components as dmc
 from dash import Dash, dcc, html, _dash_renderer
 from dash_mantine_components import MantineProvider
 
+municipios = [
+    "Fortaleza", "Caucaia", 
+    "Juazeiro do Norte", "Maracanaú", 
+    "Sobral", "Crato", "Itapipoca",
+      "Maranguape", "Quixadá", "Aquiraz"
+]
+enfermidades = ['Dengue',
+                'Chikungunya',
+                'Zika',
+                'Leptospirose',
+                'Hepatite A',
+                'Hepatite B',
+                'Tuberculose',
+                'Malária',
+                'Febre Amarela',
+                'Covid-19',
+                'HIV/AIDS',
+                'Hanseníase'
+]
+
+
+style = '''
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+* {
+    background-color: #f2e8cf;
+    font-family: 'Inter', sans-serif;
+}
+'''
 def dashboard1(appFlask):
     # Outras configs importantes
     configs = {'displaylogo': False, 'displayModeBar':False} # remove o logo do dash
@@ -24,80 +53,85 @@ def dashboard1(appFlask):
     ## --------------------------
     
     ## Linha 0 - Coloque os cards
-    configsCard = dict(withBorder=True, shadow="sm", radius="md")
-    configsCardSection = dict(withBorder=True, inheritPadding=True, py="xs")
+    paper0 = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
     
-    linha0 = dmc.Grid([
-        dmc.GridCol([   
-            dmc.Card([
-                dmc.CardSection([
-                    dmc.Text("titulo", size="sm")
-                ], **configsCardSection),
-                dmc.Text('valor', fw=500, size="lg")
-            ], **configsCard)
-        ], span=3),
+    col0 = dmc.Paper([
+        dmc.Stack([
+            dmc.MultiSelect(
+                data = [
+                    {'label': municipio, 'value': municipio} \
+                        for municipio in municipios
+                ],
+                value = municipios[3:5],
+                label="Municipios",
+                size = 'sm'
+            ),
+            dmc.MultiSelect(
+                data = [
+                    {'label': enfermidade, 'value': enfermidade} \
+                        for enfermidade in enfermidades
+                ],
+                value = enfermidades[0:2],
+                label="Enfermidades",
+                size = 'sm'
+            ),
+            dmc.DateInput(
+                label="Data Inicial",
+                value='2025-01-01'
+            ),
+            dmc.DateInput(
+                label="Data Final",
+                value='2022-01-01'
+            ),
+        ]),
+    ],**paper0)	
     
-        dmc.GridCol([   
-            dmc.Card([
-                dmc.CardSection([
-                    dmc.Text("titulo", size="sm")
-                ], **configsCardSection),
-                dmc.Text('valor', fw=500, size="lg")
-            ], **configsCard)
-        ], span=3),
-    ], gutter="xs", align="stretch", justify='center')
-    
-    ## Linha 1
+
+    # Coluna 1
     paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
     
-    linha1 = dmc.Grid([
+    col1 = dmc.Grid([
         dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig, config=configs)
             ], **paper)
-        ], span=3),
+        ], span=4),
         
         dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig, config=configs)
             ], **paper)
-        ], span=3),
+        ], span=4),
         
         dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig, config=configs)
             ], **paper)
-        ], span=3),
+        ], span=4),
+                dmc.GridCol([
+            dmc.Paper([
+                dcc.Graph(figure=fig, config=configs)
+            ], **paper)
+        ], span=4),
+        
+        dmc.GridCol([
+            dmc.Paper([
+                dcc.Graph(figure=fig, config=configs)
+            ], **paper)
+        ], span=4),
+        
+        dmc.GridCol([
+            dmc.Paper([
+                dcc.Graph(figure=fig, config=configs)
+            ], **paper)
+        ], span=4),
     ], gutter="xs", align="stretch", justify='center')
     
-    
-    ## Linha 2
-    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
-    
-    linha2 = dmc.Grid([
-        dmc.GridCol([
-            dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
-            ], **paper)
-        ], span=3),
-        
-        dmc.GridCol([
-            dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
-            ], **paper)
-        ], span=3),
-        
-        dmc.GridCol([
-            dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
-            ], **paper)
-        ], span=3),
-    ], gutter="xs", align="stretch", justify='center')
     
     ### --------------------------
     # Layout
     app.layout = html.Div(
-        style={"backgroundColor": "#f2e8cf", "minHeight": "100vh", "padding": "10px"},
+        style={'margin': '10px'},
         children=[
             MantineProvider(
                 theme={
@@ -113,14 +147,18 @@ def dashboard1(appFlask):
                     }
                 },
                 children=[
-                    dmc.Container([
-                        dmc.Stack([
-                            linha0,
-                            linha1,
-                            linha2
-                        ], gap="xs")
-                    ], fluid=True, px=0)
-                ]
+                    dmc.Grid(
+                        [
+                            dmc.GridCol(col0, span=2.8),
+                            dmc.GridCol(col1, span=9),
+                        ],
+                        gutter="xs",
+                        align="stretch",
+                        justify='center',
+                        style={'width':'100%'}
+                    )
+                ],
+
             )
         ]
     )
