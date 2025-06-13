@@ -11,11 +11,11 @@ def tratamento_enfermidade(enfermidades):
         lista.append(Title(f'{nome}', order=3))
         
         lista_items = []
-        for tupla in subset.iterrows():
+        for _, tupla in subset.iterrows():
             lista_items.append(
                 ListItem([
-                    Text(f'{tupla[1]['gravidade']} : ', fw=700, span=True),
-                    Text(f'{tupla[1]['sintomas']}', span=True)
+                    Text(f'{tupla['gravidade']} : ', fw=700, span=True),
+                    Text(f'{tupla['sintomas']}', span=True)
                 ])
             )
         lista.append(List(children=lista_items))
