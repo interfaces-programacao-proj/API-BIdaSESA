@@ -26,7 +26,7 @@
             <!-- Modal content -->
             <div class="modal-cadastro-div"> 
                 <h2>Cadastro</h2>
-                <form class="modal-cadastro-form">
+                <form class="modal-cadastro-form" action="{{ url_for('cadastro') }}" method="POST">
                     <input type="text"     id="username" name="username"  required placeholder="Nome de Usuário">
                     <input type="email"     id="email" name="email"       required placeholder="Email">
                     <input type="password" id="password" name="password"  required placeholder="Senha">

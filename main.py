@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
 
 
 # Impostando Dashboards
@@ -7,6 +7,9 @@ from templates.dash1.main import dashboard1
 
 # Descricao enfermidades
 from templates.descricao_page.decricao_page import descricao_page
+
+# Backend
+from backend.create_user import create_user, user_exists
 
 app = Flask(import_name='BI da Sesa')
 
@@ -32,11 +35,28 @@ def login():
         if username == 'admin' and password == 'admin':
             return redirect('/home')
         else:
-            return render_template('login/login.html', mensagen = 'true')
+            if user_exists(username,'',password, net=True):
+                return redirect('/home')
+    
     return render_template('login/login.html')
 
-
-
+@app.route('/cadastro', methods=['POST'])
+def cadastro():
+    if request.method == 'POST':
+        username  = request.form['username']
+        email     = request.form['email']
+        password  = request.form['password']
+        passwordR = request.form['passwordR']
+        
+        if password == passwordR:
+            if create_user(email, username, password):
+                return redirect('/home')
+            
+            return render_template('login/login.html', mensagen = 'true')
+        else:
+            return render_template('login/login.html', mensagen = 'true')
+    
+    return render_template('login/login.html')
 
 
 # Pagina home após o login
@@ -57,6 +77,15 @@ def descricao_page():
 def config_user():
     return render_template('config_user/config_user.html')
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    data = request.get_json()
+    user = data.get('user')
+    password = data.get('password')
+    return jsonify(dict(
+        user = user,
+        password = password
+    )), 200
 if __name__ == '__main__': 
     app.run(host='0.0.0.0', debug=True)
     
