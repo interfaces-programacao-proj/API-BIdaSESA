@@ -13,7 +13,17 @@
         <div>
             <h1>Conta</h1>
         </div>
-
+        
+        <form class="conta-form" action="{{ url_for('cadastro') }}" method="POST">
+            <input type="text"     id="username" name="username"  required placeholder="Nome de Usuário">
+            <input type="email"     id="email" name="email"       required placeholder="Email">
+            <input type="password" id="password" name="password"  required placeholder="Senha">
+            <input type="password" id="password" name="passwordR" required placeholder="Confirme a Senha">
+            <div>
+                <button class="button-salvar-login">Salvar</button>
+            </div>
+        </form>
+        
         <div class='div_voltar'>
             <a href='{{ url_for("home")}}'>  <h4>Voltar</h4> </a>
         </div>

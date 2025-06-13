@@ -35,3 +35,37 @@ body{
     text-decoration: none;
     color: black;
 }
+
+.conta-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.conta-form input{
+    width: 350px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: black;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo de qualquer botão */
+.button-salvar-login{
+    padding: 10px;
+    margin: 10px;
+    background-color : #a7c957;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    border: none;
+    transition: transform 0.2s;
+    color: azure;
+}
+
+.button-salvar-login:hover{
+    color: azure;
+    background-color: #b5dc5a;
+    transform: scale(1.1);
+}
