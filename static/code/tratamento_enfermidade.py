@@ -14,13 +14,13 @@ def tratamento_enfermidade(enfermidades):
         for _, tupla in subset.iterrows():
             lista_items.append(
                 ListItem([
-                    Text(f'{tupla['gravidade']} : ', fw=700, span=True),
-                    Text(f'{tupla['sintomas']}', span=True)
+                    Text(f"{tupla['gravidade']} : ", fw=700, span=True),
+                    Text(f"{tupla['sintomas']}", span=True)
                 ])
             )
         lista.append(List(children=lista_items))
         lista.append(
-            Text(f'Descrição: {subset['descricao'].values[0]}')
+            Text(f"Descrição: {subset['descricao'].values[0]}")
         )
         text.append(Paper(children=lista, p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'60%'}))
     text.insert(0, Title('Enfermidades', order=2))
