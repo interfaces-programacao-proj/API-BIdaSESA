@@ -2,8 +2,9 @@ from   sqlalchemy import create_engine
 import psycopg2 
 import pandas as pd
 
+with open('backend/key.txt', 'r') as f:
+    DATABASE_URL = f.read()
 
-DATABASE_URL = 'postgresql://postgres.uijwfmbpfdwopanehemh:saudemais1090@aws-0-us-east-2.pooler.supabase.com:6543/postgres'
 
 
 def get_enfermidades():

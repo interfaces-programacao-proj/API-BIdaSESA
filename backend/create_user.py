@@ -3,7 +3,8 @@ import psycopg2
 import pandas as pd
 
 
-DATABASE_URL = 'postgresql://postgres.uijwfmbpfdwopanehemh:saudemais1090@aws-0-us-east-2.pooler.supabase.com:6543/postgres'
+with open('backend/key.txt', 'r') as f:
+    DATABASE_URL = f.read()
 
 def user_exists(username, email, password, net=False):
     conn = psycopg2.connect(DATABASE_URL)
