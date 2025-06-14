@@ -1,7 +1,18 @@
 import plotly.graph_objects as go
 import dash_mantine_components as dmc
-from dash import Dash, dcc, html, _dash_renderer
+from dash import Dash, dcc, html, _dash_renderer, Input, Output, callback
 from dash_mantine_components import MantineProvider
+
+
+
+from static.src.plots.dash_plot_1 import (
+    barplot_1,
+    pieplot_1
+)
+from static.src.data.dash_data_1 import (
+    data_barplot_1,
+    data_pieplot_1
+)
 
 municipios = [
     "Fortaleza", "Caucaia", 
@@ -32,6 +43,13 @@ style = '''
     font-family: 'Inter', sans-serif;
 }
 '''
+
+# figs 
+
+fig_1  = barplot_1(data_barplot_1())
+
+fig_pie_1 = pieplot_1(data_pieplot_1())
+
 def dashboard1(appFlask):
     # Outras configs importantes
     configs = {'displaylogo': False, 'displayModeBar':False} # remove o logo do dash
@@ -62,26 +80,26 @@ def dashboard1(appFlask):
                     {'label': municipio, 'value': municipio} \
                         for municipio in municipios
                 ],
-                value = municipios[3:5],
+                value = municipios,
                 label="Municipios",
-                size = 'sm'
+                size = 'sm',
+                id='municipios-select'
+
             ),
             dmc.MultiSelect(
                 data = [
                     {'label': enfermidade, 'value': enfermidade} \
                         for enfermidade in enfermidades
                 ],
-                value = enfermidades[0:2],
+                value = enfermidades,
                 label="Enfermidades",
-                size = 'sm'
+                size = 'sm',
+                id='enfermidades-select'
             ),
             dmc.DateInput(
                 label="Data Inicial",
-                value='2025-01-01'
-            ),
-            dmc.DateInput(
-                label="Data Final",
-                value='2022-01-01'
+                value='2023-06-12',
+                id='start-date'
             ),
         ]),
     ],**paper0)	
@@ -93,7 +111,7 @@ def dashboard1(appFlask):
     col1 = dmc.Grid([
         dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_1, config=configs, id='grafico1')
             ], **paper)
         ], span=4),
         
@@ -110,7 +128,7 @@ def dashboard1(appFlask):
         ], span=4),
                 dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_pie_1, config=configs, id='grafico_pie_1')
             ], **paper)
         ], span=4),
         
@@ -127,40 +145,49 @@ def dashboard1(appFlask):
         ], span=4),
     ], gutter="xs", align="stretch", justify='center')
     
+
+
+    @app.callback(
+        Output('grafico1', 'figure'),
+        Input('municipios-select', 'value'),
+        Input('enfermidades-select', 'value'),
+        Input('start-date', 'value'),
+        
+    )
+    def update_graph(selected_municipios, selected_enfermidades, start_date):
+        filtered_data = data_barplot_1(data_inicio=start_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig = barplot_1(filtered_data)
+        return fig
     
+    
+    @app.callback(
+        Output('grafico_pie_1', 'figure'),
+        Input('municipios-select', 'value'),
+        Input('enfermidades-select', 'value'),
+        Input('start-date', 'value'),
+        
+    )
+    def update_graph(selected_municipios, selected_enfermidades, start_date):
+        filtered_data = data_pieplot_1(data_inicio=start_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig = pieplot_1(filtered_data)
+        return fig
+
     ### --------------------------
     # Layout
-    app.layout = html.Div(
-        style={'margin': '10px'},
-        children=[
-            MantineProvider(
-                theme={
-                    "colorScheme": "light",
-                    "primaryColor": "blue",
-                    "components": {
-                        "Paper": {
-                            "styles": {"root": {"backgroundColor": "#ffffff"}},
-                        },
-                        "Card": {
-                            "styles": {"root": {"backgroundColor": "#ffffff"}},
-                        }
-                    }
-                },
-                children=[
-                    dmc.Grid(
-                        [
-                            dmc.GridCol(col0, span=2.8),
-                            dmc.GridCol(col1, span=9),
-                        ],
-                        gutter="xs",
-                        align="stretch",
-                        justify='center',
-                        style={'width':'100%'}
-                    )
+    app.layout =  MantineProvider([
+        html.Div([
+            dmc.Grid(
+                [
+                    dmc.GridCol(col0, span=2.8),
+                    dmc.GridCol(col1, span=9),
                 ],
-
+                gutter="xs",
+                align="stretch",
+                justify='center'
+                #,style={'width':'100%'}
             )
-        ]
-    )
+        ])
+    ])
+    
 
     return app.server
