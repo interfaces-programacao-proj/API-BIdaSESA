@@ -8,6 +8,9 @@ from templates.dash1.main import dashboard1
 # Descricao enfermidades
 from templates.descricao_page.decricao_page import descricao_page
 
+# mapa de distribuição de enfermidades
+from templates.map_plot.map_plot import map_plot_dash
+
 # Backend
 from backend.create_user import create_user, user_exists
 
@@ -24,6 +27,10 @@ with app.app_context():
     # Não precisa armazenar o resultado em uma variável
     descricao_page(app)
 
+with app.app_context():
+    # A função dashboard1 já registra o blueprint no app
+    # Não precisa armazenar o resultado em uma variável
+    map_plot_dash(app)
 
 # Pagina incial de login na aplicação
 @app.route('/', methods=['GET', 'POST'])
@@ -68,6 +75,9 @@ def home():
 def dash1():
     return redirect('/home/dash1/')
 
+@app.route('/map_plot')
+def map_plot():
+    return redirect('/home/map_plot/')
 
 @app.route('/descricao_page')
 def descricao_page():
