@@ -52,7 +52,7 @@ def pieplot_1(data):
     ])
     fig.update_traces(
         marker = dict(
-            colors = ["#FF4989", "#00A2FF"]
+            colors = ["#FF83AE", "#59BFFA"]
         )
     )
     fig.update_layout(
@@ -60,13 +60,13 @@ def pieplot_1(data):
         title = dict(
             text = "Proporção enfermidade por genero",
             font = dict(
-                family = "inter, sans-serif",
+                family = "'inter', sans-serif",
                 size = 16,
                 weight='bold'
             )
         ),
         font = dict(
-            family = "inter, sans-serif",
+            family = "'inter', sans-serif",
             size = 12
         ),
         margin = dict(

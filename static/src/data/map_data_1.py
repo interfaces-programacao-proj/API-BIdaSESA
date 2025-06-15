@@ -35,28 +35,46 @@ GROUP BY nome_cidade;
     return data
 
 
-def data_table_ce(cidade):
+def data_barplot11_ce(cidade='fortaleza'):
+    cidade = cidade.lower()
     query = f'''
 SELECT 
   enfermidades.nome AS nome_enfermidade,
-  COUNT(*),
-  SUM(tratamentos.custo_total),
-  RANK() OVER ( ORDER BY SUM(tratamentos.custo_total) DESC) AS rank_custo_total,
-  RANK() OVER ( ORDER BY COUNT(*) DESC) AS rank_count
-
+  SUM(tratamentos.custo_total) AS custo_total
 FROM 
   cidades
 INNER JOIN tratamentos ON 
   cidades.cidade_id = tratamentos.cidade_id 
 INNER JOIN enfermidades ON 
   tratamentos.enfermidade_id = enfermidades.enfermidade_id
-WHERE LOWER(cidades.nome) = '{cidade.lower()}'
+WHERE LOWER(cidades.nome) = '{cidade}'
 GROUP BY nome_enfermidade
-ORDER BY nome_enfermidade;
+ORDER BY custo_total DESC;
 '''
 
-    conn.rollback()
+    for i in range(3): conn.rollback()
     data = pd.read_sql_query(query, conn)
-    data['sum'] = data['sum'].apply( lambda x: humanize.intword(x).replace('hundred', 'mil') if 'hundred' in humanize.intword(x) else humanize.intword(x)  )
-    data['sum'] = data['sum'].str.replace("million", "milhão")
+    data['sum_humanize'] = data['custo_total'].apply( lambda x: humanize.intword(x).replace('hundred', 'mil') if 'hundred' in humanize.intword(x) else humanize.intword(x)  )
+    data['sum_humanize'] = data['sum_humanize'].str.replace("million", "milhão")
     return data
+
+
+def data_barplot_ce(cidade='fortaleza'):
+    cidade = cidade.lower()
+    query = f'''
+SELECT
+  enfermidades.nome AS nome_enfermidade,
+  enfermidades.gravidade AS gravidade,
+  COUNT(*) AS quantidade
+FROM
+  cidades
+INNER JOIN tratamentos ON
+  cidades.cidade_id = tratamentos.cidade_id
+INNER JOIN enfermidades ON
+  tratamentos.enfermidade_id = enfermidades.enfermidade_id
+WHERE LOWER(cidades.nome) = '{cidade}'
+GROUP BY nome_enfermidade, gravidade
+ORDER BY nome_enfermidade;
+'''
+    for i in range(3): conn.rollback()
+    return pd.read_sql_query(query, conn)

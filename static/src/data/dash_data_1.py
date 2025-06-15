@@ -52,6 +52,7 @@ GROUP BY
 ORDER BY 
     COUNT(*) DESC;
 '''
+    for i in range(3): conn.rollback()
     return pd.read_sql_query(query, conn)
 
 
@@ -78,4 +79,6 @@ WHERE
     AND enfermidades.nome = ANY({array_literal_enfermidades})
 GROUP BY pacientes.sexo
 '''
+    for i in range(3): conn.rollback()
+    
     return pd.read_sql_query(query, conn)

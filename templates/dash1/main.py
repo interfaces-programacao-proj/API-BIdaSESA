@@ -11,7 +11,8 @@ from static.src.plots.dash_plot_1 import (
 )
 from static.src.data.dash_data_1 import (
     data_barplot_1,
-    data_pieplot_1
+    data_pieplot_1,
+
 )
 
 municipios = [
@@ -69,7 +70,32 @@ def dashboard1(appFlask):
     fig.update_layout(height=300)
     
     ## --------------------------
-    
+    app.index_string = '''
+<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+        <style>
+            body {
+                background-color: #f2e8cf !important;
+                margin: 0;
+                padding: 0;
+            }
+        </style>
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>
+'''
     ## Linha 0 - Coloque os cards
     paper0 = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
     
