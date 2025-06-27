@@ -72,20 +72,16 @@ def home():
     return render_template('home/home.html')
 
 @app.route('/dash1')
-def dash1():
-    return redirect('/home/dash1/')
+def dash1(): return redirect('/home/dash1/')
 
 @app.route('/map_plot')
-def map_plot():
-    return redirect('/home/map_plot/')
+def map_plot():return redirect('/home/map_plot/')
 
 @app.route('/descricao_page')
-def descricao_page():
-    return redirect('/home/descricao_page/')
+def descricao_page(): return redirect('/home/descricao_page/')
 
 @app.route('/config_user')
-def config_user():
-    return render_template('config_user/config_user.html')
+def config_user(): return render_template('config_user/config_user.html')
 
 @app.route('/logout', methods=['POST'])
 def logout():

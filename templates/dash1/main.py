@@ -12,7 +12,6 @@ from static.src.plots.dash_plot_1 import (
 from static.src.data.dash_data_1 import (
     data_barplot_1,
     data_pieplot_1,
-
 )
 
 municipios = [
@@ -21,46 +20,24 @@ municipios = [
     "Sobral", "Crato", "Itapipoca",
       "Maranguape", "Quixadá", "Aquiraz"
 ]
-enfermidades = ['Dengue',
-                'Chikungunya',
-                'Zika',
-                'Leptospirose',
-                'Hepatite A',
-                'Hepatite B',
-                'Tuberculose',
-                'Malária',
-                'Febre Amarela',
-                'Covid-19',
-                'HIV/AIDS',
-                'Hanseníase'
+enfermidades = ['Dengue', 'Chikungunya', 'Zika', 'Leptospirose', 'Hepatite A', 'Hepatite B', 'Tuberculose',
+                'Malária', 'Febre Amarela', 'Covid-19', 'HIV/AIDS', 'Hanseníase'
 ]
 
 
-style = '''
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
 
-* {
-    background-color: #f2e8cf;
-    font-family: 'Inter', sans-serif;
-}
-'''
-
-# figs 
-
+# ---------------------------------PLOTS---------------------------------
 fig_1  = barplot_1(data_barplot_1())
 
 fig_pie_1 = pieplot_1(data_pieplot_1())
+
+
 
 def dashboard1(appFlask):
     # Outras configs importantes
     configs = {'displaylogo': False, 'displayModeBar':False} # remove o logo do dash
     
-    app = Dash(
-        name="dashboardStatic", 
-        title="Dashboard", 
-        server = appFlask, 
-        url_base_pathname='/home/dash1/',
-    )
+    app = Dash( name="dashboardStatic", title="Dashboard", server = appFlask, url_base_pathname='/home/dash1/')
 
     #Veja se essa config não foi atualizada
     _dash_renderer._set_react_version('18.2.0')
@@ -79,10 +56,12 @@ def dashboard1(appFlask):
         {%favicon%}
         {%css%}
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
             body {
                 background-color: #f2e8cf !important;
                 margin: 0;
                 padding: 0;
+                font-family: 'Inter', sans-serif;
             }
         </style>
     </head>
@@ -106,27 +85,16 @@ def dashboard1(appFlask):
                     {'label': municipio, 'value': municipio} \
                         for municipio in municipios
                 ],
-                value = municipios,
-                label="Municipios",
-                size = 'sm',
-                id='municipios-select'
-
+                value = municipios, label="Municipios", size = 'sm', id='municipios-select'
             ),
             dmc.MultiSelect(
                 data = [
                     {'label': enfermidade, 'value': enfermidade} \
                         for enfermidade in enfermidades
                 ],
-                value = enfermidades,
-                label="Enfermidades",
-                size = 'sm',
-                id='enfermidades-select'
+                value = enfermidades, label="Enfermidades", size = 'sm', id='enfermidades-select'
             ),
-            dmc.DateInput(
-                label="Data Inicial",
-                value='2023-06-12',
-                id='start-date'
-            ),
+            dmc.DateInput( label="Data Inicial", value='2023-06-12', id='start-date' ),
         ]),
     ],**paper0)	
     
@@ -172,20 +140,19 @@ def dashboard1(appFlask):
     ], gutter="xs", align="stretch", justify='center')
     
 
-
+    #-----------------------------------------
     @app.callback(
         Output('grafico1', 'figure'),
         Input('municipios-select', 'value'),
         Input('enfermidades-select', 'value'),
-        Input('start-date', 'value'),
-        
+        Input('start-date', 'value')
     )
     def update_graph(selected_municipios, selected_enfermidades, start_date):
         filtered_data = data_barplot_1(data_inicio=start_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig = barplot_1(filtered_data)
         return fig
     
-    
+    #-----------------------------------------
     @app.callback(
         Output('grafico_pie_1', 'figure'),
         Input('municipios-select', 'value'),
@@ -198,20 +165,16 @@ def dashboard1(appFlask):
         fig = pieplot_1(filtered_data)
         return fig
 
+
+
     ### --------------------------
     # Layout
     app.layout =  MantineProvider([
         html.Div([
-            dmc.Grid(
-                [
-                    dmc.GridCol(col0, span=2.8),
-                    dmc.GridCol(col1, span=9),
-                ],
-                gutter="xs",
-                align="stretch",
-                justify='center'
-                #,style={'width':'100%'}
-            )
+            dmc.Grid([
+                dmc.GridCol(col0, span=2.8),
+                dmc.GridCol(col1, span=9),
+            ], gutter="xs",align="stretch", justify='center')
         ])
     ])
     
