@@ -24,7 +24,7 @@ def descricao_page(appFlask):
         html.Div([
             text    
         ], style={
-            'background-color': '#f2e8cf',
+            'background-color': '#c6ac8f',
         })
     ], theme={
         "fontFamily": "'Inter', sans-serif",

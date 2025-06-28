@@ -6,13 +6,21 @@ def barplot_1(data):
         go.Bar(
             x=data['nome'],
             y=data['incidencias'],
-            text=data['incidencias'],
             orientation='v',
         )
     ])
     fig.update_traces(
-        marker_color = "#0796D4",
-        hovertemplate = "Quantidade de tratamentos: %{y}<extra></extra>"
+        marker = dict(
+            color = ['#1b263b']+['#415a77']*12,
+        ),
+        hovertemplate = "Quantidade de tratamentos: %{y}<extra></extra>",
+        hoverlabel = dict(
+            bgcolor = "white",
+            font = dict(
+                family = "inter, sans-serif",
+                size = 12
+            )
+        )
     )
     fig.update_layout(
         template = "simple_white",
@@ -21,7 +29,8 @@ def barplot_1(data):
             font = dict(
                 family = "inter, sans-serif",
                 size = 16,
-                weight='bold'
+                weight='bold',
+                color = '#1b263b'
             )
         ),
         font = dict(
@@ -35,7 +44,9 @@ def barplot_1(data):
             b = 0
         ),
         dragmode=False,
-        height = 300
+        height = 300,
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5'
     )
     return fig
 
@@ -52,7 +63,7 @@ def pieplot_1(data):
     ])
     fig.update_traces(
         marker = dict(
-            colors = ["#FF83AE", "#59BFFA"]
+            colors = ["#bc4749", "#003049"]
         )
     )
     fig.update_layout(
@@ -62,7 +73,8 @@ def pieplot_1(data):
             font = dict(
                 family = "'inter', sans-serif",
                 size = 16,
-                weight='bold'
+                weight='bold',
+                color = '#1b263b'
             )
         ),
         font = dict(
@@ -76,6 +88,8 @@ def pieplot_1(data):
             b = 0
         ),
         dragmode=False,
-        height = 300
+        height = 300,
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5'
     )
     return fig

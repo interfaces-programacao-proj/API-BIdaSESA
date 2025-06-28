@@ -24,6 +24,7 @@ def map_plot_ce(data, geo_ce=geo_ce):
         center={"lat": -14, "lon": -55},
         fitbounds="locations",
         coastlinecolor="black",
+        bgcolor="#eae0d5",
         showrivers=True,            # Exibe rios no mapa
         rivercolor="blue",
         visible=False,
@@ -34,6 +35,7 @@ def map_plot_ce(data, geo_ce=geo_ce):
             bgcolor = "white",
             font = dict(
                 family = "'inter', sans-serif",
+                
                 size = 16
             )  
         ),
@@ -41,7 +43,11 @@ def map_plot_ce(data, geo_ce=geo_ce):
     )
     fig.update_layout(
         title = dict(
-            text = "Quantidade de tratamentos por cidade",  
+            text = "Quantidade de tratamentos por cidade",
+            font = dict(
+                weight = 'bold',
+
+            )  
         ),
         font = dict(
             family = "'inter', sans-serif",
@@ -53,55 +59,11 @@ def map_plot_ce(data, geo_ce=geo_ce):
             r = 0
         ),
         width = 350,
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5',
         dragmode = False
     )
 
-    return fig
-
-
-def table_plot(data):
-    data.rename(columns={'nome_enfermidade': 'Enfermidade', 'count': 'Quantidade de tratamentos', 'sum': 'Custo total'}, inplace=True)
-    fig = go.Figure([
-        go.Table(
-            header=dict(
-                values=data.columns.tolist()[:3],
-                fill_color='deepskyblue',
-                line_color='darkslategray',
-                align='center',
-                font=dict(
-                    color='black', 
-                    size =16,
-                    family = "'inter', sans-serif",
-                )
-            ),
-            cells=dict(
-                values=[data[col] for col in data.columns[:3]],
-                fill_color=[['white' for i in range(len(data))], 
-                            np.array(colors)[data.rank_count-1],
-                            np.array(colors)[data.rank_custo_total-1],
-                            ],
-                line_color='darkslategray',
-                align='center',
-                font=dict(
-                    color='black', 
-                    size =14,
-                    family = "'inter', sans-serif",
-                ),
-                height=30
-            )
-        )
-    ])
-    fig.update_layout(
-        font = dict(
-            family = "'inter', sans-serif",
-        ),
-        margin = dict(
-            t = 5,
-            b = 5,
-            l = 5,
-            r = 5
-        ),
-    )
     return fig
 
 
@@ -116,13 +78,19 @@ def barplot_ce(data, cidade='fortaleza'):
             orientation='h',
         )
     ])
-
+    fig.update_traces(
+        marker = dict(
+            color = ['#415a77']*11+['#1b263b'],
+        )
+    )
     fig.update_layout(
         template = "simple_white",
         title = dict(
             text = f'Distribuição de enfermidades no municipio {cidade}',
             font = dict(
-                weight = 'bold'
+                weight = 'bold',
+                family = "'inter', sans-serif",
+                color = '#1b263b'
             )
         ),
         font = dict(
@@ -134,12 +102,17 @@ def barplot_ce(data, cidade='fortaleza'):
             l = 10,
             r = 10
         ),
+
         xaxis = dict(
             visible = False
         ),
-        height = 320
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5',
+        height=340
     )
-
+    fig.update_xaxes(
+        color = '#1b263b'
+    )
 
     return fig
 
@@ -154,9 +127,11 @@ def barplot11_ce(data, cidade='fortaleza'):
             orientation='h',
         )
     ])
-
     fig.update_traces(
-        hoverinfo = 'none'
+        hoverinfo = 'none',
+        marker = dict(
+            color = ['#415a77']*11+['#1b263b'],
+        )
     )
 
     fig.update_layout(
@@ -164,11 +139,14 @@ def barplot11_ce(data, cidade='fortaleza'):
         title = dict(
             text = f'Curto total de tratamentos no municipio {cidade}',
             font = dict(
-                weight = 'bold'
+                weight = 'bold',
+                family = "'inter', sans-serif",
+                color = '#1b263b'
             )
         ),
         font = dict(
             family = "'inter', sans-serif",
+            
         ),
         margin = dict(
             t = 50,
@@ -179,9 +157,12 @@ def barplot11_ce(data, cidade='fortaleza'):
         xaxis = dict(
             visible = False
         ),
-        dragmode = False
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5'
     )
-
+    fig.update_xaxes(
+        color = '#1b263b'
+    )
 
     return fig
 
@@ -198,7 +179,10 @@ def pie_hoverlabel(data, enfermidade ,cidade='fortaleza'):
     ])
 
     fig.update_traces(
-        hoverinfo = 'none'
+        hoverinfo = 'none',
+        marker = dict(
+            colors = ["#778da9", "#1b263b","#e9edc9"]
+        )
     )
 
     fig.update_layout(
@@ -206,7 +190,9 @@ def pie_hoverlabel(data, enfermidade ,cidade='fortaleza'):
         title = dict(
             text = f'Proporção de gravidade no municipio {cidade}',
             font = dict(
-                weight = 'bold'
+                weight = 'bold',
+                family = "'inter', sans-serif",
+                color = '#1b263b'
             )
         ),
         font = dict(
@@ -220,7 +206,9 @@ def pie_hoverlabel(data, enfermidade ,cidade='fortaleza'):
         ),
         width = 500,
         height = 300,
-        dragmode = False
+        dragmode = False,
+        plot_bgcolor='#eae0d5',
+        paper_bgcolor='#eae0d5'
     )
 
     return fig

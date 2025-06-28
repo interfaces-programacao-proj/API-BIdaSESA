@@ -12,6 +12,8 @@ from static.src.plots.dash_plot_1 import (
 from static.src.data.dash_data_1 import (
     data_barplot_1,
     data_pieplot_1,
+    data_card_1,
+    data_card_2
 )
 
 municipios = [
@@ -24,7 +26,10 @@ enfermidades = ['Dengue', 'Chikungunya', 'Zika', 'Leptospirose', 'Hepatite A', '
                 'Malária', 'Febre Amarela', 'Covid-19', 'HIV/AIDS', 'Hanseníase'
 ]
 
+# ---------------------------------Cards---------------------------------
 
+cards_1 = data_card_1()
+cards_2 = data_card_2()
 
 # ---------------------------------PLOTS---------------------------------
 fig_1  = barplot_1(data_barplot_1())
@@ -40,7 +45,7 @@ def dashboard1(appFlask):
     app = Dash( name="dashboardStatic", title="Dashboard", server = appFlask, url_base_pathname='/home/dash1/')
 
     #Veja se essa config não foi atualizada
-    _dash_renderer._set_react_version('18.2.0')
+    #_dash_renderer._set_react_version('18.2.0')
 
     # COLOQUE OS GRAFICOS ABAIXO
     fig = go.Figure()
@@ -58,7 +63,7 @@ def dashboard1(appFlask):
         <style>
             @import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
             body {
-                background-color: #f2e8cf !important;
+                background-color: #c6ac8f !important;
                 margin: 0;
                 padding: 0;
                 font-family: 'Inter', sans-serif;
@@ -76,7 +81,7 @@ def dashboard1(appFlask):
 </html>
 '''
     ## Linha 0 - Coloque os cards
-    paper0 = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
+    paper0 = dict(p="xs", shadow="xl", mt="md", withBorder=True, bg='#eae0d5')
     
     col0 = dmc.Paper([
         dmc.Stack([
@@ -94,15 +99,36 @@ def dashboard1(appFlask):
                 ],
                 value = enfermidades, label="Enfermidades", size = 'sm', id='enfermidades-select'
             ),
-            dmc.DateInput( label="Data Inicial", value='2023-06-12', id='start-date' ),
+            dmc.DateInput( label="Inicial", value='2023-06-12', id='start-date' ),
+            dmc.DateInput( label="Final"  , value='2025-10-11', id='end-date' ),
         ]),
     ],**paper0)	
     
 
     # Coluna 1
-    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'100%'})
+    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, bg='#eae0d5')
     
     col1 = dmc.Grid([
+        dmc.GridCol([
+            dmc.Grid([
+                dmc.GridCol([
+                    dmc.Card([
+                        dmc.CardSection([
+                            dmc.Text("Casos totais"),
+                        ], withBorder=True, inheritPadding=True, py="xs"),
+                        dmc.Text(cards_1, id='casos_totais'),
+                    ],withBorder=True, w=300, bg='#eae0d5', shadow="xl") 
+                ],span=3),
+                dmc.GridCol([
+                    dmc.Card([
+                        dmc.CardSection([
+                           dmc.Text("Custo total"),
+                        ],withBorder=True, inheritPadding=True, py="xs"),
+                        dmc.Text(cards_2, id='custo_total'),
+                    ], withBorder=True, w=300, bg='#eae0d5', shadow="xl") 
+                ],span=3),
+            ],  gutter="xs", align="stretch", justify='center')        
+        ]),
         dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig_1, config=configs, id='grafico1')
@@ -140,15 +166,35 @@ def dashboard1(appFlask):
     ], gutter="xs", align="stretch", justify='center')
     
 
+
+    # Cards
+    @app.callback(
+        Output('casos_totais', 'children'),
+        Output('custo_total', 'children'),
+        Input('municipios-select', 'value'),
+        Input('enfermidades-select', 'value'),
+        Input('start-date', 'value'),
+        Input('end-date', 'value'),
+    )
+    def update_cards(selected_municipios, selected_enfermidades, start_date, end_date):
+        cards_1 = data_card_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        cards_2 = data_card_2(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        return cards_1, cards_2
+
+
+
+
+
     #-----------------------------------------
     @app.callback(
         Output('grafico1', 'figure'),
         Input('municipios-select', 'value'),
         Input('enfermidades-select', 'value'),
-        Input('start-date', 'value')
+        Input('start-date', 'value'),
+        Input('end-date', 'value'),
     )
-    def update_graph(selected_municipios, selected_enfermidades, start_date):
-        filtered_data = data_barplot_1(data_inicio=start_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+    def update_graph(selected_municipios, selected_enfermidades, start_date, end_date):
+        filtered_data = data_barplot_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig = barplot_1(filtered_data)
         return fig
     
@@ -158,10 +204,11 @@ def dashboard1(appFlask):
         Input('municipios-select', 'value'),
         Input('enfermidades-select', 'value'),
         Input('start-date', 'value'),
+        Input('end-date', 'value'),
         
     )
-    def update_graph(selected_municipios, selected_enfermidades, start_date):
-        filtered_data = data_pieplot_1(data_inicio=start_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+    def update_graph(selected_municipios, selected_enfermidades, start_date, end_date):
+        filtered_data = data_pieplot_1(data_inicio=start_date, data_fim=end_date,cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig = pieplot_1(filtered_data)
         return fig
 

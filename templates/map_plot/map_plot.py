@@ -21,13 +21,14 @@ def map_plot_dash(appFlask):
     # Outras configs importantes
     configs = {'displaylogo': False, 'displayModeBar':False} # remove o logo do dash
     
-    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True)
+    paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, bg='#eae0d5')
     
 
     app = Dash( name="dashboardStatic",  title="BI da Sesa", server = appFlask,  url_base_pathname='/home/map_plot/' )
 
     #Veja se essa config nao foi atualizada
-    _dash_renderer._set_react_version('18.2.0')
+    #_dash_renderer._set_react_version('18.2.0')
+
     #-----------------------
     app.index_string = '''
 <!DOCTYPE html>
@@ -39,7 +40,7 @@ def map_plot_dash(appFlask):
         {%css%}
         <style>
             body {
-                background-color: #f2e8cf !important;
+                background-color: #c6ac8f !important;
                 margin: 0;
                 padding: 0;
             }
@@ -56,29 +57,33 @@ def map_plot_dash(appFlask):
 </html>
 '''
     # ----------------------
-
+    linha0 = dmc.Grid([
+                dmc.GridCol([
+                    dmc.Paper([
+                        dcc.Graph( id='map_plot_ce', figure=fig_map, config=configs ),
+                        dmc.Text("Selecione um município no mapa",  id='texto',c="dimmed",  
+                                 style={'margin-top': '-20px','position':'absolute'}
+                        )
+                    ], **paper)
+                ], span=6),
+                dmc.GridCol([
+                    dmc.Paper([
+                        dcc.Graph( id='table_plot_ce', figure=fig_table, config=configs ),
+                    ], **paper)
+                ], span=4),
+            ], gutter="xs", align="stretch", justify='center')
+    
+    linha1 = dmc.Paper([
+                dcc.Graph( id='barplot_ce', figure=fig_bar, config=configs, clear_on_unhover=True ),
+                dcc.Tooltip(id="barplot-tooltip", direction="top", background_color='#eae0d5'),
+            ], **paper, style={'width':'35%'} )
+    
     app.layout = MantineProvider([ 
-        dmc.Grid([
-            dmc.GridCol([
-                dmc.Paper([
-                    dcc.Graph( id='map_plot_ce', figure=fig_map, config=configs ),
-                    dmc.Text("Selecione um município no mapa",  id='texto',c="dimmed",  
-                             style={'margin-top': '-20px','position':'absolute'}
-                    )
-                ], **paper)
-            ], span=6),
-            dmc.GridCol([
-                dmc.Paper([
-                    dcc.Graph( id='table_plot_ce', figure=fig_table, config=configs ),
-                ], **paper)
-            ], span=4),
-            dmc.GridCol([
-                dmc.Paper([
-                    dcc.Graph( id='barplot_ce', figure=fig_bar, config=configs, clear_on_unhover=True ),
-                    dcc.Tooltip(id="barplot-tooltip", direction="top"),
-                ], **paper)
-            ], span=4),
-        ], gutter="xs", align="stretch", justify='center')
+        dmc.Container([
+            linha0,
+            dmc.Center([linha1])
+        ], fluid=True)
+
     ])
 
 

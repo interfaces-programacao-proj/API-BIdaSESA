@@ -22,7 +22,7 @@ def tratamento_enfermidade(enfermidades):
         lista.append(
             Text(f"Descrição: {subset['descricao'].values[0]}")
         )
-        text.append(Paper(children=lista, p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'60%'}))
+        text.append(Paper(children=lista, p="xs", shadow="xl", mt="md", withBorder=True, style={'height':'100%', 'width':'60%'}, bg='#eae0d5'))
     text.insert(0, Title('Enfermidades', order=2))
     text.insert(0, Space(h=10))
 

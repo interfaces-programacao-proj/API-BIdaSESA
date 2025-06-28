@@ -47,6 +47,7 @@ def login():
     
     return render_template('login/login.html')
 
+
 @app.route('/cadastro', methods=['POST'])
 def cadastro():
     if request.method == 'POST':
@@ -80,8 +81,11 @@ def map_plot():return redirect('/home/map_plot/')
 @app.route('/descricao_page')
 def descricao_page(): return redirect('/home/descricao_page/')
 
+
+
 @app.route('/config_user')
 def config_user(): return render_template('config_user/config_user.html')
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
