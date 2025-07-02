@@ -1,7 +1,5 @@
 import os
 from flask import Flask, render_template, request, redirect, jsonify
-
-
 # Impostando Dashboards
 from templates.dash1.main import dashboard1
 

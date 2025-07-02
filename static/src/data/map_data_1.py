@@ -78,3 +78,5 @@ ORDER BY nome_enfermidade;
 '''
     for i in range(3): conn.rollback()
     return pd.read_sql_query(query, conn)
+
+

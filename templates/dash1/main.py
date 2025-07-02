@@ -1,19 +1,23 @@
 import plotly.graph_objects as go
 import dash_mantine_components as dmc
-from dash import Dash, dcc, html, _dash_renderer, Input, Output, callback
+from dash import Dash, dcc, html, _dash_renderer, Input, Output, callback, clientside_callback
 from dash_mantine_components import MantineProvider
 
 
 
 from static.src.plots.dash_plot_1 import (
     barplot_1,
-    pieplot_1
+    pieplot_1,
+    barplot_3,
+    barplot_4
 )
 from static.src.data.dash_data_1 import (
     data_barplot_1,
     data_pieplot_1,
     data_card_1,
-    data_card_2
+    data_card_2,
+    data_barplot_3,
+    data_barplot_4
 )
 
 municipios = [
@@ -36,8 +40,12 @@ fig_1  = barplot_1(data_barplot_1())
 
 fig_pie_1 = pieplot_1(data_pieplot_1())
 
+fig_bar_3 = barplot_3(data_barplot_3())
+
+fig_bar_4 = barplot_4(data_barplot_4())
 
 
+# ---------------------------------DASHBOARD------------------------------
 def dashboard1(appFlask):
     # Outras configs importantes
     configs = {'displaylogo': False, 'displayModeBar':False} # remove o logo do dash
@@ -103,7 +111,43 @@ def dashboard1(appFlask):
             dmc.DateInput( label="Final"  , value='2025-10-11', id='end-date' ),
         ]),
     ],**paper0)	
-    
+
+    # Cards
+    cards1_ = dmc.Card([
+            dmc.CardSection([
+                dmc.Title("Casos totais", order=4),
+            ], 
+            withBorder    =True, 
+            inheritPadding=True, 
+            py="xs" ,
+            style={'borderColor': '#1b263b'}
+        ),
+        dmc.Title(cards_1, id='casos_totais', order=5),
+    ],
+    mt="md",
+    shadow="xl",
+    withBorder=True, 
+    w=300, 
+    bg='#eae0d5' 
+    )
+
+    cards2_ = dmc.Card([
+            dmc.CardSection([
+                dmc.Title("Custo total", order=4),
+            ], 
+            withBorder    =True, 
+            inheritPadding=True, 
+            py="xs" ,
+            style={'borderColor': '#1b263b'}
+        ),
+        dmc.Title(cards_2, id='custo_total', order=5),
+    ],
+    mt="md",
+    shadow="xl",
+    withBorder=True, 
+    w=300, 
+    bg='#eae0d5' 
+    )         
 
     # Coluna 1
     paper = dict(p="xs", shadow="xl", mt="md", withBorder=True, bg='#eae0d5')
@@ -111,24 +155,11 @@ def dashboard1(appFlask):
     col1 = dmc.Grid([
         dmc.GridCol([
             dmc.Grid([
-                dmc.GridCol([
-                    dmc.Card([
-                        dmc.CardSection([
-                            dmc.Text("Casos totais"),
-                        ], withBorder=True, inheritPadding=True, py="xs"),
-                        dmc.Text(cards_1, id='casos_totais'),
-                    ],withBorder=True, w=300, bg='#eae0d5', shadow="xl") 
-                ],span=3),
-                dmc.GridCol([
-                    dmc.Card([
-                        dmc.CardSection([
-                           dmc.Text("Custo total"),
-                        ],withBorder=True, inheritPadding=True, py="xs"),
-                        dmc.Text(cards_2, id='custo_total'),
-                    ], withBorder=True, w=300, bg='#eae0d5', shadow="xl") 
-                ],span=3),
+                dmc.GridCol([ cards1_ ], span=2.8),
+                dmc.GridCol([ cards2_ ], span=2.8),
             ],  gutter="xs", align="stretch", justify='center')        
         ]),
+        
         dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig_1, config=configs, id='grafico1')
@@ -137,16 +168,18 @@ def dashboard1(appFlask):
         
         dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_bar_3, id='grafico_bar_3',config=configs)
             ], **paper)
         ], span=4),
         
         dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_bar_4, id='grafico_bar_4',config=configs)
             ], **paper)
+
         ], span=4),
-                dmc.GridCol([
+
+        dmc.GridCol([
             dmc.Paper([
                 dcc.Graph(figure=fig_pie_1, config=configs, id='grafico_pie_1')
             ], **paper)
@@ -163,7 +196,7 @@ def dashboard1(appFlask):
                 dcc.Graph(figure=fig, config=configs)
             ], **paper)
         ], span=4),
-    ], gutter="xs", align="stretch", justify='center')
+    ], gutter=6, align="stretch", justify='center' )
     
 
 
@@ -181,22 +214,6 @@ def dashboard1(appFlask):
         cards_2 = data_card_2(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         return cards_1, cards_2
 
-
-
-
-
-    #-----------------------------------------
-    @app.callback(
-        Output('grafico1', 'figure'),
-        Input('municipios-select', 'value'),
-        Input('enfermidades-select', 'value'),
-        Input('start-date', 'value'),
-        Input('end-date', 'value'),
-    )
-    def update_graph(selected_municipios, selected_enfermidades, start_date, end_date):
-        filtered_data = data_barplot_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
-        fig = barplot_1(filtered_data)
-        return fig
     
     #-----------------------------------------
     @app.callback(
@@ -220,10 +237,69 @@ def dashboard1(appFlask):
         html.Div([
             dmc.Grid([
                 dmc.GridCol(col0, span=2.8),
-                dmc.GridCol(col1, span=9),
+                dmc.GridCol([ 
+                    html.Div([
+                        dmc.LoadingOverlay(
+                            visible=False,
+                            id="loading-overlay",
+                            overlayProps={"radius": "sm", "blur": 1, "backgroundOpacity": 0.1},
+                            loaderProps={"color": "#1b263b", "type": "oval"},
+                        ),
+                        col1
+                    ], style={'position': 'relative'}),
+                ], span=9),
             ], gutter="xs",align="stretch", justify='center')
         ])
     ])
+    
+
+    #-----------------------------------------
+    ### Loading
+    clientside_callback(
+        """
+        function(children) {
+            return false;
+        }
+        """,
+        Output("loading-overlay", "visible"),
+        Input("grafico1", "figure"),
+    )
+    @app.callback(
+        Output("loading-overlay", "visible"),
+        Input('municipios-select', 'value'),
+        Input('enfermidades-select', 'value'),
+        Input('start-date', 'value'),
+        Input('end-date', 'value'),
+        prevent_initial_call=True
+    )
+    def show_loading_spinner(*_):
+        # Aqui você pode fazer checagens extras se quiser
+        # Mas como os callbacks principais já estão processando, você ativa loading
+        return True  # Ativa o overlay enquanto os callbacks estão atualizando
+
+
+
+
+    #-----------------------------------------
+    @app.callback(
+        Output('grafico1', 'figure'),
+        Output('grafico_bar_3', 'figure'),
+        Output('grafico_bar_4', 'figure'),
+        Input('municipios-select', 'value'),
+        Input('enfermidades-select', 'value'),
+        Input('start-date', 'value'),
+        Input('end-date', 'value'),
+    )
+    def update_graph(selected_municipios, selected_enfermidades, start_date, end_date):
+        filtered_data = data_barplot_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig = barplot_1(filtered_data)
+
+        filtered_data = data_barplot_3(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig_bar_3 = barplot_3(filtered_data)
+
+        filtered_data = data_barplot_4(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig_bar_4 = barplot_4(filtered_data)
+        return fig, fig_bar_3, fig_bar_4
     
 
     return app.server

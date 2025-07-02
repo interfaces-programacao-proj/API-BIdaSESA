@@ -46,7 +46,8 @@ def map_plot_ce(data, geo_ce=geo_ce):
             text = "Quantidade de tratamentos por cidade",
             font = dict(
                 weight = 'bold',
-
+                family = "'inter', sans-serif",
+                color = '#1b263b'
             )  
         ),
         font = dict(
@@ -59,8 +60,8 @@ def map_plot_ce(data, geo_ce=geo_ce):
             r = 0
         ),
         width = 350,
-        plot_bgcolor='#eae0d5',
-        paper_bgcolor='#eae0d5',
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         dragmode = False
     )
 
@@ -106,8 +107,8 @@ def barplot_ce(data, cidade='fortaleza'):
         xaxis = dict(
             visible = False
         ),
-        plot_bgcolor='#eae0d5',
-        paper_bgcolor='#eae0d5',
+       plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
         height=340
     )
     fig.update_xaxes(
@@ -157,8 +158,8 @@ def barplot11_ce(data, cidade='fortaleza'):
         xaxis = dict(
             visible = False
         ),
-        plot_bgcolor='#eae0d5',
-        paper_bgcolor='#eae0d5'
+       plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
     )
     fig.update_xaxes(
         color = '#1b263b'
