@@ -249,3 +249,132 @@ ORDER BY tempo_medio DESC;
     data = pd.read_sql_query(query, conn)
     data['tempo_medio_cat'] = data['tempo_medio'].apply(lambda x: str(round(x,2))+ ' dias' )
     return data
+
+
+#---------------- lineplot -----------------
+
+def data_lineplot_1( data_inicio='2023-06-12', data_fim='2025-06-11', cidade=municipios, enfermidade=enfermidades):
+    array_literal = "ARRAY[" + ",".join(f"'{s}'" for s in cidade) + "]::text[]"
+    array_literal_enfermidades = "ARRAY[" + ",".join(f"'{s}'" for s in enfermidade) + "]::text[]"
+    query = f'''
+SELECT
+  tratamentos.data_inicio,
+  COUNT(*)
+FROM 
+  tratamentos
+INNER JOIN cidades ON 
+    tratamentos.cidade_id = cidades.cidade_id
+INNER JOIN enfermidades ON
+    tratamentos.enfermidade_id = enfermidades.enfermidade_id
+WHERE
+    tratamentos.data_inicio BETWEEN '{data_inicio}' AND '{data_fim}' 
+    AND cidades.nome      = ANY({array_literal})
+    AND enfermidades.nome = ANY({array_literal_enfermidades})
+GROUP BY tratamentos.data_inicio;
+'''
+    for i in range(2):conn.rollback()
+
+    return pd.read_sql_query(query, conn)
+
+
+
+def data_barplot_5( data_inicio='2023-06-12', data_fim='2025-06-11', cidade=municipios, enfermidade=enfermidades):
+    array_literal = "ARRAY[" + ",".join(f"'{s}'" for s in cidade) + "]::text[]"
+    array_literal_enfermidades = "ARRAY[" + ",".join(f"'{s}'" for s in enfermidade) + "]::text[]"
+    query = f'''
+WITH tabela_idade AS (
+  SELECT 
+    EXTRACT( YEAR FROM CURRENT_DATE)  - EXTRACT( YEAR FROM data_nascimento) AS idade,
+    paciente_id
+  FROM 
+    pacientes
+),
+faixa_etaria AS (
+  SELECT CASE
+    WHEN idade <= 1                THEN 'Bebe'
+    WHEN idade > 1 AND idade <= 12 THEN 'Criança'
+    WHEN idade > 12 AND idade <= 18 THEN 'Adolescente'
+    WHEN idade > 18 AND idade <=25  THEN 'Jovem'
+    WHEN idade > 25 AND idade <=60  THEN 'Adulto'
+    WHEN idade > 60 AND idade <=75  THEN 'Idoso J'
+    WHEN idade > 75 THEN 'Idoso velho'
+    else 'idoso'
+  END AS faixa,
+  paciente_id
+  FROM tabela_idade
+)
+SELECT 
+  faixa,
+  enfermidades.gravidade,
+  count(*) AS casos_total
+FROM 
+  faixa_etaria
+INNER JOIN tratamentos ON  
+  tratamentos.paciente_id = faixa_etaria.paciente_id
+INNER JOIN enfermidades ON  
+  tratamentos.enfermidade_id = enfermidades.enfermidade_id
+INNER JOIN cidades ON 
+    tratamentos.cidade_id = cidades.cidade_id
+WHERE
+    tratamentos.data_inicio BETWEEN '{data_inicio}' AND '{data_fim}' 
+    AND cidades.nome      = ANY({array_literal})
+    AND enfermidades.nome = ANY({array_literal_enfermidades})
+GROUP BY faixa, enfermidades.gravidade
+ORDER BY faixa DESC;
+''' 
+    for i in range(2): conn.rollback()
+
+    return pd.read_sql_query(query, conn)
+
+
+
+#---------------- plot -----------------
+
+def data_barplot_6( data_inicio='2023-06-12', data_fim='2025-06-11', cidade=municipios, enfermidade=enfermidades):
+    array_literal = "ARRAY[" + ",".join(f"'{s}'" for s in cidade) + "]::text[]"
+    array_literal_enfermidades = "ARRAY[" + ",".join(f"'{s}'" for s in enfermidade) + "]::text[]"
+    query = f'''
+WITH tabela_idade AS (
+  SELECT 
+    EXTRACT( YEAR FROM CURRENT_DATE)  - EXTRACT( YEAR FROM data_nascimento) AS idade,
+    paciente_id
+  FROM 
+    pacientes
+),
+faixa_etaria AS (
+  SELECT CASE
+    WHEN idade <= 1                THEN 'Bebe'
+    WHEN idade > 1 AND idade <= 12 THEN 'Criança'
+    WHEN idade > 12 AND idade <= 18 THEN 'Adolescente'
+    WHEN idade > 18 AND idade <=25  THEN 'Jovem'
+    WHEN idade > 25 AND idade <=60  THEN 'Adulto'
+    WHEN idade > 60 AND idade <=75  THEN 'Idoso J'
+    WHEN idade > 75 THEN 'Idoso velho'
+    else 'idoso'
+  END AS faixa,
+  paciente_id
+  FROM tabela_idade
+)
+SELECT 
+  faixa,
+  enfermidades.gravidade,
+  AVG(tratamentos.custo_total) AS custo_médio
+FROM 
+  faixa_etaria
+INNER JOIN tratamentos ON  
+  tratamentos.paciente_id = faixa_etaria.paciente_id
+INNER JOIN enfermidades ON  
+  tratamentos.enfermidade_id = enfermidades.enfermidade_id
+INNER JOIN cidades ON 
+    tratamentos.cidade_id = cidades.cidade_id
+WHERE
+    tratamentos.data_inicio BETWEEN '{data_inicio}' AND '{data_fim}' 
+    AND cidades.nome      = ANY({array_literal})
+    AND enfermidades.nome = ANY({array_literal_enfermidades})
+GROUP BY faixa, enfermidades.gravidade
+ORDER BY faixa DESC;
+'''
+    for i in range(2):conn.rollback()
+
+    return pd.read_sql_query(query, conn)
+

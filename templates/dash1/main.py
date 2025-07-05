@@ -9,7 +9,10 @@ from static.src.plots.dash_plot_1 import (
     barplot_1,
     pieplot_1,
     barplot_3,
-    barplot_4
+    barplot_4,
+    lineplot_1,
+    barplot_5,
+    barplot_6
 )
 from static.src.data.dash_data_1 import (
     data_barplot_1,
@@ -17,7 +20,10 @@ from static.src.data.dash_data_1 import (
     data_card_1,
     data_card_2,
     data_barplot_3,
-    data_barplot_4
+    data_barplot_4,
+    data_lineplot_1,
+    data_barplot_5,
+    data_barplot_6
 )
 
 municipios = [
@@ -43,6 +49,12 @@ fig_pie_1 = pieplot_1(data_pieplot_1())
 fig_bar_3 = barplot_3(data_barplot_3())
 
 fig_bar_4 = barplot_4(data_barplot_4())
+
+fig_bar_5 = barplot_5(data_barplot_5())
+
+fig_bar_6 = barplot_6(data_barplot_6())
+
+fig_line_1 = lineplot_1(data_lineplot_1())
 
 
 # ---------------------------------DASHBOARD------------------------------
@@ -187,15 +199,21 @@ def dashboard1(appFlask):
         
         dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_line_1, config=configs, id='grafico_line_1')
             ], **paper)
         ], span=4),
         
         dmc.GridCol([
             dmc.Paper([
-                dcc.Graph(figure=fig, config=configs)
+                dcc.Graph(figure=fig_bar_5, config=configs)
             ], **paper)
         ], span=4),
+
+        dmc.GridCol([
+            dmc.Paper([
+                dcc.Graph(figure=fig_bar_6, config=configs)
+            ], **paper)
+        ], span=6),
     ], gutter=6, align="stretch", justify='center' )
     
 
@@ -236,17 +254,13 @@ def dashboard1(appFlask):
     app.layout =  MantineProvider([
         html.Div([
             dmc.Grid([
-                dmc.GridCol(col0, span=2.8),
-                dmc.GridCol([ 
+                dmc.GridCol([
                     html.Div([
-                        dmc.LoadingOverlay(
-                            visible=False,
-                            id="loading-overlay",
-                            overlayProps={"radius": "sm", "blur": 1, "backgroundOpacity": 0.1},
-                            loaderProps={"color": "#1b263b", "type": "oval"},
-                        ),
-                        col1
-                    ], style={'position': 'relative'}),
+                        col0
+                    ], style={'margin-top': '150px'})
+                ], span=2.8),
+                dmc.GridCol([ 
+                    col1
                 ], span=9),
             ], gutter="xs",align="stretch", justify='center')
         ])
@@ -255,27 +269,26 @@ def dashboard1(appFlask):
 
     #-----------------------------------------
     ### Loading
-    clientside_callback(
-        """
-        function(children) {
-            return false;
-        }
-        """,
-        Output("loading-overlay", "visible"),
-        Input("grafico1", "figure"),
-    )
-    @app.callback(
-        Output("loading-overlay", "visible"),
-        Input('municipios-select', 'value'),
-        Input('enfermidades-select', 'value'),
-        Input('start-date', 'value'),
-        Input('end-date', 'value'),
-        prevent_initial_call=True
-    )
-    def show_loading_spinner(*_):
-        # Aqui você pode fazer checagens extras se quiser
-        # Mas como os callbacks principais já estão processando, você ativa loading
-        return True  # Ativa o overlay enquanto os callbacks estão atualizando
+    #clientside_callback(
+    #    """
+    #    function(children) {
+    #        return false;
+    #    }
+    #    """,
+    #    Output("loading-overlay", "visible"),
+    #    Input("grafico1", "figure"),
+    #)
+    #@app.callback(
+    #    Output("loading-overlay", "visible"),
+    #    Input('municipios-select', 'value'),
+    #    Input('enfermidades-select', 'value'),
+    #    Input('start-date', 'value'),
+    #    Input('end-date', 'value'),
+    #)
+    #def show_loading_spinner(*_):
+    #    # Aqui você pode fazer checagens extras se quiser
+    #    # Mas como os callbacks principais já estão processando, você ativa loading
+    #    return True  # Ativa o overlay enquanto os callbacks estão atualizando
 
 
 
@@ -285,21 +298,30 @@ def dashboard1(appFlask):
         Output('grafico1', 'figure'),
         Output('grafico_bar_3', 'figure'),
         Output('grafico_bar_4', 'figure'),
+        Output('grafico_line_1', 'figure'),
         Input('municipios-select', 'value'),
         Input('enfermidades-select', 'value'),
         Input('start-date', 'value'),
         Input('end-date', 'value'),
     )
     def update_graph(selected_municipios, selected_enfermidades, start_date, end_date):
+        # Grafico de Barras
         filtered_data = data_barplot_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig = barplot_1(filtered_data)
 
+        # Grafico de Barras
         filtered_data = data_barplot_3(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig_bar_3 = barplot_3(filtered_data)
 
+        # Grafico de Barras
         filtered_data = data_barplot_4(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
         fig_bar_4 = barplot_4(filtered_data)
-        return fig, fig_bar_3, fig_bar_4
+
+        # Grafico de Linha
+        filtered_data = data_lineplot_1(data_inicio=start_date, data_fim=end_date, cidade=selected_municipios, enfermidade=selected_enfermidades)
+        fig_line_1 = lineplot_1(filtered_data)
+
+        return fig, fig_bar_3, fig_bar_4, fig_line_1
     
 
     return app.server
