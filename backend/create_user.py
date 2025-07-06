@@ -6,6 +6,28 @@ import pandas as pd
 with open('backend/key.txt', 'r') as f:
     DATABASE_URL = f.read()
 
+
+def user_exists_login(email, password):
+    engine = create_engine(DATABASE_URL)
+    conn = engine.connect()
+    conn.rollback()
+
+    query = f'''
+SELECT
+    *
+FROM
+    user_system
+WHERE
+    email = '{email}' AND password = '{password}'
+'''
+
+    result = pd.read_sql_query(query, conn)
+
+    if len(result) > 0:
+        return True
+    else:
+        return False
+    
 def user_exists(username, email, password, net=False):
     engine = create_engine(DATABASE_URL)
     conn = engine.connect()

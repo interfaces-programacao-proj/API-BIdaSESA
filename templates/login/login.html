@@ -12,7 +12,7 @@
         <div class="div-login">
             <h2>Login</h2>
             <form action='{{ url_for("login")}}' method="POST">
-                <input type="text"     id="username" name="username" required placeholder="Nome de Usuário">
+                <input type="text"     id="email"    name="email"    required placeholder="Email">
                 <input type="password" id="password" name="password" required placeholder="Senha">
                 <button class="button-cadastrar-login">Login</button>
             </form>
@@ -39,37 +39,39 @@
             </div>
         </div>
     </div>
+    
+    {% if message %}
+        <script>
+            (function(){alert("Usuário n o existe! Cadastre-se, por favor.")})();
+        </script>
+    {% endif %}
 
-        <script type="text/javascript">
-            var modal = document.getElementById("modal-cadastro");
-            var btn  = document.getElementById("abrir-modal");
-            var span = document.getElementsByClassName("close")[0];
-
-            // Quando o usuário clicar no botão
-            btn.onclick = function() {
+    <script type="text/javascript">
+        var modal = document.getElementById("modal-cadastro");
+        var btn  = document.getElementById("abrir-modal");
+        var span = document.getElementsByClassName("close")[0];
+        // Quando o usuário clicar no botão
+        btn.onclick = function() {
+            event.preventDefault();
+            modal.style.display = "block";
+            
+            // Sempre que abrir, reatribui o evento de clique ao botão "Sair"
+            var btnSair = document.querySelector("[class=button-sair]");
+            btnSair.onclick = function(event) {
                 event.preventDefault();
-                modal.style.display = "block";
-
-                
-                // Sempre que abrir, reatribui o evento de clique ao botão "Sair"
-                var btnSair = document.querySelector("[class=button-sair]");
-                btnSair.onclick = function(event) {
-                    event.preventDefault();
-                    modal.style.display = "none";
-                };
-            }
-
-            // Quando o usuário clicar no X
-            span.onclick = function() {
+                modal.style.display = "none";
+            };
+        }
+        // Quando o usuário clicar no X
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+        // Quando o usuário clicar fora do modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
                 modal.style.display = "none";
             }
-
-            // Quando o usuário clicar fora do modal
-            window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
-                }
-            }
-        </script>    
+        }
+    </script>    
 </body>
 </html>

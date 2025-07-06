@@ -14,7 +14,6 @@
             <h1>Menu</h1>
         </div>
 
-
         <div class='div_dashboards'>
             <a href='{{ url_for("dash1")}}'> <h3> Dashboards SESA</h3> </a>
         </div>
@@ -24,10 +23,14 @@
         <div class='div_dashboards'> 
             <a href='{{ url_for("descricao_page")}}'> <h3> Descrição de enfermidades </h3> </a>
         </div>
+        <div class="div_dashboards">
+            <a href='{{ url_for("config_user")}}'> <h3> Configurações de usuário </h3> </a>
+        </div>
         <div class='div_voltar'>
             <a href='{{ url_for("login")}}'>  <h4>Voltar</h4> </a>
         </div>
     </div>
+
 
 </body>
 </html>
