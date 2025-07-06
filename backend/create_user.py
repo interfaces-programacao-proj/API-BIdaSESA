@@ -64,14 +64,14 @@ def create_user(email, username, password):
     return True
 
 
-def return_json_data(username, password):
+def return_json_data(username):
     query = f'''
 SELECT
     *
 FROM 
     user_system 
 WHERE
-    nome = '{username}' AND password = '{password}'
+    email = '{username}'
 LIMIT 1
 '''
     engine = create_engine(DATABASE_URL)
@@ -84,4 +84,4 @@ LIMIT 1
             transaction.rollback()
             raise
     
-    return data.to_json(orient='records')
+    return data.to_dict('dict')

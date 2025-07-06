@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - BI da Sesa</title>
+    <title>BI da Sesa</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/config_user.css') }}">
     <link rel="icon" href="{{ url_for('static', filename='icons/icons-logo.svg') }}" type="image/x-icon">
 </head>
@@ -19,27 +19,27 @@
                    id  ="username" 
                    name="username"  
                    required placeholder="Nome de Usuário"
-                   value="{{ user_data.username or '' }}"
+                   value="{{ user_data.nome.0 or '' }}"
             >
             <input 
                 type="email"     
                 id  ="email" 
                 name="email"       
                 required placeholder="Email"
-                value="{{ user_data.email or '' }}"
+                value="{{ user_data.email.0 or '' }}"
             >
             <input 
-                type="password" 
                 id  ="password" 
                 name="password"  
                 required placeholder="Senha"
+                value="{{ user_data.password.0 or '' }}"
                
             >
             <input 
-                type="password" 
                 id  ="password" 
                 name="passwordR" 
                 required placeholder="Confirme a Senha"
+                value="{{ user_data.password.0 or '' }}"
             >
             <div>
                 <button class="button-salvar-login">Salvar</button>

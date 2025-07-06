@@ -11,6 +11,7 @@ from templates.map_plot.map_plot import map_plot_dash
 
 # Backend
 from backend.create_user import create_user, user_exists, return_json_data, user_exists_login
+from backend.update_user import update_user
 
 app = Flask(import_name='BI da Sesa')
 app.secret_key = 'sua_chave_secreta_aqui'  # Necessário para usar sessions
@@ -84,10 +85,24 @@ def map_plot():
 def descricao_page(): 
     return redirect('/home/descricao_page/')
 
-@app.route('/config_user', methods=['GET'])
+@app.route('/config_user', methods=['GET', 'POST'])
 def config_user(): 
-    
-    return render_template('config_user/config_user.html')
+    user_data = return_json_data(session['username'])
+    if request.method == 'POST':
+        username  = request.form['username']
+        email     = request.form['email']
+        password  = request.form['password']
+        passwordR = request.form['passwordR']
+
+        if password == passwordR:
+            if update_user(email, username, password):
+                return redirect('/home')
+            
+            return render_template('config_user/config_user.html', user_data=user_data)
+        else:
+            return render_template('config_user/config_user.html', user_data=user_data)
+        
+    return render_template('config_user/config_user.html', user_data=user_data)
 
 
 @app.route('/logout', methods=['POST'])
