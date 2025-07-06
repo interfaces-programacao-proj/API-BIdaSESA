@@ -7,8 +7,9 @@ with open('backend/key.txt', 'r') as f:
     DATABASE_URL = f.read()
 
 def user_exists(username, email, password, net=False):
-    conn = create_engine(DATABASE_URL)
-
+    engine = create_engine(DATABASE_URL)
+    conn = engine.connect()
+    conn.rollback()
     # verificando a existencia
     email = '' if net else "AND email = '"+email+"'"
     query = f'''
@@ -20,8 +21,7 @@ WHERE
     nome = '{username}' AND password = '{password}'
 '''
     
-    with conn.connect() as connection:
-        result = connection.execute(query).fetchall()
+    result = pd.read_sql_query(query, conn)
 
     if len(result) > 0:
         if net: return True
@@ -34,7 +34,9 @@ def create_user(email, username, password):
     if not user_exists(username, email, password):
         return False
     
-    conn = create_engine(DATABASE_URL)
+    engine = create_engine(DATABASE_URL)
+    conn = engine.connect()
+    conn.rollback()
     conn.execute(f"INSERT INTO user_system (nome, email , password) VALUES ('{username}', '{email}', '{password}')")
     conn.commit()
     return True

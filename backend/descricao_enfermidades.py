@@ -10,8 +10,7 @@ with open('backend/key.txt', 'r') as f:
 def get_enfermidades():
     engine = create_engine(DATABASE_URL)
     conn = engine.connect()
-    result = conn.execute("SELECT * FROM enfermidades").fetchall()
-    conn.close()
-    # to pandas
-    result = pd.DataFrame(result, columns=['id', 'enfermidade', 'descricao', 'gravidade', 'sintomas'])
-    return result
+    conn.rollback()
+    data = pd.read_sql_query('SELECT * FROM enfermidades', conn)
+    data.rename(columns={'nome':'enfermidade'}, inplace=True)
+    return data
