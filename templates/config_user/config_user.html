@@ -15,10 +15,32 @@
         </div>
         
         <form class="conta-form" action="{{ url_for('cadastro') }}" method="POST">
-            <input type="text"     id="username" name="username"  required placeholder="Nome de Usuário">
-            <input type="email"     id="email" name="email"       required placeholder="Email">
-            <input type="password" id="password" name="password"  required placeholder="Senha">
-            <input type="password" id="password" name="passwordR" required placeholder="Confirme a Senha">
+            <input type="text"     
+                   id  ="username" 
+                   name="username"  
+                   required placeholder="Nome de Usuário"
+                   value="{{ user_data.username or '' }}"
+            >
+            <input 
+                type="email"     
+                id  ="email" 
+                name="email"       
+                required placeholder="Email"
+                value="{{ user_data.user_data.email or '' }}"
+            >
+            <input 
+                type="password" 
+                id  ="password" 
+                name="password"  
+                required placeholder="Senha"
+               
+            >
+            <input 
+                type="password" 
+                id  ="password" 
+                name="passwordR" 
+                required placeholder="Confirme a Senha"
+            >
             <div>
                 <button class="button-salvar-login">Salvar</button>
             </div>

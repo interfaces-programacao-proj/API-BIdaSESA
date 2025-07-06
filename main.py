@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, redirect, jsonify
+from flask import Flask, render_template, request, redirect, jsonify, session
 # Impostando Dashboards
 from templates.dash1.main import dashboard1
 
@@ -13,21 +13,16 @@ from templates.map_plot.map_plot import map_plot_dash
 from backend.create_user import create_user, user_exists, return_json_data
 
 app = Flask(import_name='BI da Sesa')
+app.secret_key = 'sua_chave_secreta_aqui'  # Necessário para usar sessions
 
 # Inicialize o dashboard dentro do contexto da aplicação
 with app.app_context():
-    # A função dashboard1 já registra o blueprint no app
-    # Não precisa armazenar o resultado em uma variável
     dashboard1(app)
 
 with app.app_context():
-    # A função dashboard1 já registra o blueprint no app
-    # Não precisa armazenar o resultado em uma variável
     descricao_page(app)
 
 with app.app_context():
-    # A função dashboard1 já registra o blueprint no app
-    # Não precisa armazenar o resultado em uma variável
     map_plot_dash(app)
 
 # Pagina incial de login na aplicação
@@ -38,13 +33,12 @@ def login():
         password = request.form['password']
         
         if username == 'admin' and password == 'admin':
+            # Armazena informações do usuário na sessão
+            session['username'] = username
+            session['user_type'] = 'admin'
             return redirect('/home')
         else:
-            if user_exists(username,'',password, net=True):
-                json_ = return_json_data(username,password)
-                
-                
-
+            if user_exists(username,'',password, net=True):   
                 return redirect('/home')
     
     return render_template('login/login.html')
@@ -60,6 +54,7 @@ def cadastro():
         
         if password == passwordR:
             if create_user(email, username, password):
+                session['username'] = username
                 return redirect('/home')
             
             return render_template('login/login.html', mensagen = 'true')
@@ -85,21 +80,21 @@ def descricao_page(): return redirect('/home/descricao_page/')
 
 
 
-@app.route('/config_user')
-def config_user(): return render_template('config_user/config_user.html')
-
 
 @app.route('/logout', methods=['POST'])
 def logout():
     data = request.get_json()
     user = data.get('user')
     password = data.get('password')
+    
+    # Limpa a sessão
+    session.clear()
+    
     return jsonify(dict(
         user = user,
-        password = password
+        password = password,
+        message = 'Logout realizado com sucesso'
     )), 200
     
 if __name__ == '__main__': 
     app.run(host='0.0.0.0', debug=True)
-    
-

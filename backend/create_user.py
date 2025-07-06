@@ -61,4 +61,5 @@ LIMIT 1
         except:
             transaction.rollback()
             raise
+    
     return data.to_json(orient='records')
