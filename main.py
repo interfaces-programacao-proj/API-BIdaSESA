@@ -58,12 +58,12 @@ def cadastro():
         
         if password == passwordR:
             if create_user(email, username, password):
-                session['username'] = username
+                session['username'] = email
                 return redirect('/home')
             
-            return render_template('login/login.html', mensagen = 'true')
+            return render_template('login/login.html', mensagen = True)
         else:
-            return render_template('login/login.html', mensagen = 'true')
+            return render_template('login/login.html', mensagen = True)
     
     return render_template('login/login.html')
 
@@ -111,8 +111,7 @@ def logout():
     user = data.get('user')
     password = data.get('password')
     
-    # Limpa a sessão
-    session.clear()
+
     
     return jsonify(dict(
         user = user,

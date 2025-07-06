@@ -1,4 +1,4 @@
-from   sqlalchemy import create_engine
+from   sqlalchemy import create_engine, text
 import psycopg2 
 import pandas as pd
 
@@ -33,14 +33,14 @@ def user_exists(username, email, password, net=False):
     conn = engine.connect()
     conn.rollback()
     # verificando a existencia
-    email = '' if net else "AND email = '"+email+"'"
+    
     query = f'''
 SELECT
     *
 FROM 
     user_system 
 WHERE
-    nome = '{username}' AND password = '{password}'
+    email = '{email}' AND password = '{password}'
 '''
     
     result = pd.read_sql_query(query, conn)
@@ -59,7 +59,17 @@ def create_user(email, username, password):
     engine = create_engine(DATABASE_URL)
     conn = engine.connect()
     conn.rollback()
-    conn.execute(f"INSERT INTO user_system (nome, email , password) VALUES ('{username}', '{email}', '{password}')")
+
+    query = text("INSERT INTO user_system (nome, email, password) VALUES (:username, :email, :password)")
+
+# Executando com segurança
+    dicio = {
+        "username": username,
+        "email": email,
+        "password": password
+    }
+    conn.commit()
+    conn.execute(query, dicio)
     conn.commit()
     return True
 
