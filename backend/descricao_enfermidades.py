@@ -8,12 +8,9 @@ with open('backend/key.txt', 'r') as f:
 
 
 def get_enfermidades():
-    conn = psycopg2.connect(DATABASE_URL)
-    query = "SELECT * FROM enfermidades"
-    cursor = conn.cursor()
-    cursor.execute(query)
-    result = cursor.fetchall()
-    cursor.close()
+    engine = create_engine(DATABASE_URL)
+    conn = engine.connect()
+    result = conn.execute("SELECT * FROM enfermidades").fetchall()
     conn.close()
     # to pandas
     result = pd.DataFrame(result, columns=['id', 'enfermidade', 'descricao', 'gravidade', 'sintomas'])
