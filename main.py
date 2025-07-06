@@ -10,7 +10,7 @@ from templates.descricao_page.decricao_page import descricao_page
 from templates.map_plot.map_plot import map_plot_dash
 
 # Backend
-from backend.create_user import create_user, user_exists
+from backend.create_user import create_user, user_exists, return_json_data
 
 app = Flask(import_name='BI da Sesa')
 
@@ -41,6 +41,10 @@ def login():
             return redirect('/home')
         else:
             if user_exists(username,'',password, net=True):
+                json_ = return_json_data(username,password)
+                
+                
+
                 return redirect('/home')
     
     return render_template('login/login.html')

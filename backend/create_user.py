@@ -17,13 +17,14 @@ SELECT
 FROM 
     user_system 
 WHERE
-    nome = '{username}' AND password = '{password}' {email}
+    nome = '{username}' AND password = '{password}'
 '''
     
     cursor = conn.cursor()
     conn.rollback()
     cursor.execute(query)
     result = cursor.fetchall()
+    print(result)
     cursor.close()
     conn.close()
 
@@ -50,3 +51,20 @@ def create_user(email, username, password):
     cursor.close()
     conn.close()
     return True
+
+
+def return_json_data(username, password):
+    query = f'''
+SELECT
+    *
+FROM 
+    user_system 
+WHERE
+    nome = '{username}' AND password = '{password}'
+LIMIT 1
+'''
+    conn = psycopg2.connect(DATABASE_URL)
+    conn.rollback()
+    data = pd.read_sql_query(query, conn)
+    print(data)
+    return data.to_json(orient='records')
